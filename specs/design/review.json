@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "artifacts": [
+    {
+      "path": "specs/design/components/todo-webapp/prototype.json",
+      "checkedHash": "72654665e9120020520ce550af2475f161d407effba7820db7119694df88fdf1"
+    },
+    {
+      "path": "specs/design/design.cell",
+      "checkedHash": "0774a6f19fe5c52f80d350190a8e729f2874d5b6052fcd40821d480db8ddaf70"
+    },
+    {
+      "path": "specs/design/domain-model.md",
+      "checkedHash": "f63a8d88a962f35712ed459895ef07046d33f701308304be26bc0d1db33ce9e9"
+    },
+    {
+      "path": "specs/design/components/todo-api/openapi.yaml",
+      "checkedHash": "181d45101a0491ff7e54da9a2a08cfe87f71488372efd272c0cd1ed59896d1bf"
+    },
+    {
+      "path": "specs/design/decisions.md",
+      "checkedHash": "4bb047ef6923926f70e48f71510a2f1a46c618619ed456a0ce2451124eb3bd44"
+    }
+  ]
+}
