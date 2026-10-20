@@ -20,9 +20,10 @@ Add, list, complete, rename and delete todos, which persist between visits, for 
 - Deleting is immediate, with no confirmation.
 - A title cannot be blank: adding or saving an edit with an empty title is rejected.
 - Leading and trailing spaces in a title are trimmed.
-- A title is at most 200 characters; a longer one is rejected like a blank one. *assumed*
+- A title is at most 200 characters; a longer one is rejected like a blank one.
 
 ## Out of Scope
 
 - Undoing a delete.
 - Reordering todos by hand.
+
