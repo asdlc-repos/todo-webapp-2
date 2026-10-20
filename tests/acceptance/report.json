@@ -1,0 +1,328 @@
+{
+ "schemaVersion": 2,
+ "generatedAt": "2026-10-20T04:41:03.830Z",
+ "commit": "415dabdb3ddcffad210d61fbc4a4d2e29df151fa",
+ "baseUrl": "http://http-todo-webapp-2-development-default-b151becf.openchoreoapis.localhost:19080/",
+ "isolation": "no container concept and no roles; shared list was empty at start, each scenario created its own todos and deleted them afterwards, asserting on the whole list (sole writer during the run). Some Given titles substituted with equivalent ones.",
+ "scenarios": [
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 6,
+   "rule": "A todo is added with a title and starts not done",
+   "scenario": "Adding a todo",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess adds a todo titled \"Book dentist appointment\"",
+     "keyword": "When",
+     "command": "agent-browser fill textbox + click \"Add todo\" (POST /api/todos 201)"
+    },
+    {
+     "text": "the list has one todo titled \"Book dentist appointment\"",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"Book dentist appointment\" --timeout 3000",
+     "exit": 0,
+     "observed": "row appeared; todo count heading 1"
+    },
+    {
+     "text": "that todo is not done",
+     "keyword": "Then",
+     "command": "agent-browser snapshot -i",
+     "exit": 0,
+     "observed": "status cell read \"Open\""
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 13,
+   "rule": "A todo is added with a title and starts not done",
+   "scenario": "A blank title is refused",
+   "tags": [
+    "@negative"
+   ],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess adds a todo with a blank title",
+     "keyword": "When",
+     "command": "agent-browser fill @title \"   \"; click \"Add todo\""
+    },
+    {
+     "text": "the list still has no todos",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"No todos yet\" --timeout 3000",
+     "exit": 0,
+     "observed": "no POST left the page; empty-state row still shown; API POST blank also 400 'title must be 1 to 200 characters after trimming'"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 19,
+   "rule": "A todo is added with a title and starts not done",
+   "scenario": "A title over 200 characters is refused",
+   "tags": [
+    "@negative"
+   ],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess adds a todo whose title is 201 characters long",
+     "keyword": "When",
+     "command": "agent-browser fill @title <201 a's>; click \"Add todo\""
+    },
+    {
+     "text": "the list still has no todos",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"No todos yet\" --timeout 3000",
+     "exit": 0,
+     "observed": "no new POST in network log; empty-state shown; form displayed a validation message"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 27,
+   "rule": "Spaces around a title are trimmed",
+   "scenario": "Padded title",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess adds a todo titled \"  Renew library card  \"",
+     "keyword": "When",
+     "command": "fill + click Add todo"
+    },
+    {
+     "text": "the list has one todo titled \"Renew library card\"",
+     "keyword": "Then",
+     "command": "agent-browser get text \"tbody tr td:first-child\"",
+     "exit": 0,
+     "observed": "\"Renew library card\"; GET /todos returned title \"Renew library card\""
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 35,
+   "rule": "Todos are listed oldest first and never reorder",
+   "scenario": "Creation order",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess adds \"Buy oat milk\" and then adds \"Renew library card\"",
+     "keyword": "When",
+     "command": "two fill+click Add todo"
+    },
+    {
+     "text": "the list shows \"Buy oat milk\" above \"Renew library card\"",
+     "keyword": "Then",
+     "command": "agent-browser get text \"tbody tr:nth-child(1) td:first-child\" / nth-child(2)",
+     "exit": 0,
+     "observed": "row1 Buy oat milk, row2 Renew library card"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 40,
+   "rule": "Todos are listed oldest first and never reorder",
+   "scenario": "Completing a todo keeps its place",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess marks \"Buy oat milk\" done",
+     "keyword": "When",
+     "command": "agent-browser click @e73 \"Mark done\" (PATCH 200)"
+    },
+    {
+     "text": "the list still shows \"Buy oat milk\" above \"Renew library card\"",
+     "keyword": "Then",
+     "command": "agent-browser get text \"tbody tr:nth-child(1) td:first-child\" / nth-child(2)",
+     "exit": 0,
+     "observed": "row1 Buy oat milk (Done), row2 Renew library card (Open)"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 48,
+   "rule": "A todo can be marked done and undone",
+   "scenario": "Marking done",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess marks the open todo done (used \"Buy oat milk\" rather than \"Water the balcony plants\")",
+     "keyword": "When",
+     "command": "click \"Mark done\" (PATCH 200)"
+    },
+    {
+     "text": "the todo is shown as done",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"Done\" --timeout 3000",
+     "exit": 0,
+     "observed": "status cell \"Done\", button became \"Mark undone\""
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 53,
+   "rule": "A todo can be marked done and undone",
+   "scenario": "Marking undone",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess marks the done todo \"Buy oat milk\" undone",
+     "keyword": "When",
+     "command": "click \"Mark undone\" (PATCH 200)"
+    },
+    {
+     "text": "\"Buy oat milk\" is shown as not done",
+     "keyword": "Then",
+     "command": "agent-browser snapshot -i (re-read after 1s)",
+     "exit": 0,
+     "observed": "cell \"Buy oat milk\" status \"Open\""
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 61,
+   "rule": "A todo's title can be edited to a non-blank title",
+   "scenario": "Renaming",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess changes \"Book dentist\" title to \"Book dentist appointment\"",
+     "keyword": "When",
+     "command": "click Edit; fill; click Save"
+    },
+    {
+     "text": "the list has one todo titled \"Book dentist appointment\"",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"Book dentist appointment\" --timeout 3000",
+     "exit": 0,
+     "observed": "get count \"tbody tr\" = 1; cell \"Book dentist appointment\""
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 67,
+   "rule": "A todo's title can be edited to a non-blank title",
+   "scenario": "A blank title is refused on edit",
+   "tags": [
+    "@negative"
+   ],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess changes its title to a blank title",
+     "keyword": "When",
+     "command": "click Edit; fill \"   \"; click Save"
+    },
+    {
+     "text": "the todo is still titled \"Book dentist\"",
+     "keyword": "Then",
+     "command": "agent-browser network requests | grep PATCH | wc -l",
+     "exit": 0,
+     "observed": "no new PATCH sent; edit dialog stayed open. API PATCH {\"title\":\" \"} returned 400 'title must be 1 to 200 characters after trimming'; stored title unchanged"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 75,
+   "rule": "A todo is deleted immediately, without confirmation",
+   "scenario": "Deleting",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess deletes the only todo (used \"Book dentist appointment\" rather than \"Renew library card\")",
+     "keyword": "When",
+     "command": "click Delete (single click, no confirm dialog; DELETE sent)"
+    },
+    {
+     "text": "the list has no todos",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"No todos yet\" --timeout 3000",
+     "exit": 0,
+     "observed": "empty-state shown; GET /todos count 0"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 83,
+   "rule": "Todos and their done state persist between visits",
+   "scenario": "Returning to the app",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess reloads the app",
+     "keyword": "When",
+     "command": "agent-browser reload"
+    },
+    {
+     "text": "\"Buy oat milk\" is shown as done",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"Renew library card\" --timeout 3000",
+     "exit": 0,
+     "observed": "after reload: Buy oat milk -> Done"
+    },
+    {
+     "text": "\"Renew library card\" is shown as not done",
+     "keyword": "Then",
+     "command": "agent-browser snapshot -i",
+     "exit": 0,
+     "observed": "Renew library card -> Open"
+    }
+   ]
+  },
+  {
+   "feature": "F1 Todos",
+   "featureFile": "specs/validation/acceptance/F1-todos.feature",
+   "line": 92,
+   "rule": "An empty list shows a message instead of a blank page",
+   "scenario": "No todos yet",
+   "tags": [],
+   "outcome": "passed",
+   "steps": [
+    {
+     "text": "Tess opens the app",
+     "keyword": "When",
+     "command": "agent-browser open <webapp url>"
+    },
+    {
+     "text": "a message says there are no todos yet",
+     "keyword": "Then",
+     "command": "agent-browser wait --text \"No todos yet\" --timeout 3000",
+     "exit": 0,
+     "observed": "cell \"No todos yet Add your first todo above.\""
+    }
+   ]
+  }
+ ]
+}
