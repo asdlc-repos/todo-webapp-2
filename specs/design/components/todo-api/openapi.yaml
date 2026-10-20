@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Todo API
+  version: 0.1.0
+servers:
+  - url: /
+paths:
+  /todos:
+    get:
+      operationId: listTodos
+      summary: "Every todo, oldest first"
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 500, minimum: 1, maximum: 500 }
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0, minimum: 0 }
+      responses:
+        '200':
+          description: "The todos in creation order, done ones included"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [count, data]
+                properties:
+                  count: { type: integer, description: "total todos" }
+                  next: { type: string, nullable: true, description: "relative URI of the next page" }
+                  previous: { type: string, nullable: true, description: "relative URI of the previous page" }
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Todo' }
+        '400':
+          description: "Invalid paging parameters"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    post:
+      operationId: createTodo
+      summary: "Add a todo, not done, at the end of the list"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TodoCreate' }
+      responses:
+        '201':
+          description: "The created todo"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Todo' }
+        '400':
+          description: "Title blank or longer than 200 characters"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /todos/{todoId}:
+    parameters:
+      - name: todoId
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    patch:
+      operationId: updateTodo
+      summary: "Change a todo's title and/or done state"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/TodoUpdate' }
+      responses:
+        '200':
+          description: "The updated todo"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Todo' }
+        '400':
+          description: "Title blank or longer than 200 characters"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: "No such todo"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    delete:
+      operationId: deleteTodo
+      summary: "Delete a todo immediately"
+      responses:
+        '204':
+          description: "Deleted"
+        '404':
+          description: "No such todo"
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+components:
+  schemas:
+    Todo:
+      type: object
+      required: [id, title, done, createdAt, updatedAt]
+      properties:
+        id: { type: string, format: uuid }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        done: { type: boolean }
+        createdAt: { type: string, format: date-time, description: "orders the list, oldest first" }
+        updatedAt: { type: string, format: date-time }
+    TodoCreate:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, description: "trimmed by the service; 1-200 characters after trimming" }
+    TodoUpdate:
+      type: object
+      properties:
+        title: { type: string, description: "trimmed by the service; 1-200 characters after trimming" }
+        done: { type: boolean }
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: integer, description: "HTTP or application error code" }
+        message: { type: string, description: "short human-readable label" }
+        description: { type: string, description: "detailed explanation" }
+        moreInfo: { type: string, description: "URI to documentation" }

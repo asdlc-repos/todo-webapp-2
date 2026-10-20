@@ -1,0 +1,16 @@
+{
+  "name": "todo-api",
+  "type": "service",
+  "version": "0.1.0",
+  "language": "Ballerina",
+  "buildpack": "docker",
+  "appPath": "todo-api",
+  "entrypoint": "deployment/service",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "platform-resource", "name": "todo-db", "resourceType": "postgres-cnpg", "description": "Stores the todos: title, done state and creation time." }
+  ],
+  "description": "Single backend for the todo list: creates, lists (oldest first), updates the title or done state of, and deletes todos, validating titles (trimmed, 1-200 characters). It owns the PostgreSQL store and is the only component that touches it. It is open to anyone, with no sign-in, and does not model users, sharing, due dates or categories.",
+  "stories": ["F1.1", "F1.2", "F1.3", "F1.4", "F1.5", "F1.6"],
+  "skillsPinned": ["openapi-conventions", "ballerina"]
+}

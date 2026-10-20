@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 3,
+  "name": "Todo",
+  "entryScreen": "screen.todos",
+  "roles": [{ "id": "User", "name": "User" }],
+  "states": [
+    { "id": "state.default", "name": "Default" },
+    { "id": "state.empty", "name": "No todos yet" },
+    { "id": "state.validation-error", "name": "Blank title refused" },
+    { "id": "state.failed", "name": "Todos failed to load" }
+  ],
+  "screens": [
+    { "id": "screen.todos", "name": "Todos", "roleIds": ["User"] },
+    { "id": "screen.account", "name": "Account", "roleIds": ["User"] },
+    { "id": "screen.signed-out", "name": "Signed out", "roleIds": ["User"] }
+  ],
+  "flows": [
+    { "id": "flow.manage-todos", "name": "Add, complete, rename and delete todos", "roleId": "User", "screenIds": ["screen.todos"] }
+  ]
+}

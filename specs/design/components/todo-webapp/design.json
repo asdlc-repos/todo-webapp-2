@@ -1,0 +1,16 @@
+{
+  "name": "todo-webapp",
+  "type": "web-application",
+  "version": "0.1.0",
+  "language": "TypeScript",
+  "buildpack": "docker",
+  "appPath": "todo-webapp",
+  "entrypoint": "deployment/web-application",
+  "exposure": "internet",
+  "dependencies": [
+    { "kind": "component", "name": "todo-api", "description": "Loads, creates, edits, completes and deletes todos." }
+  ],
+  "description": "The single-page app where the User sees the todo list and adds, completes, renames and deletes todos, with an empty-list message and blank-title validation. A separate deployable because it is the only browser surface. It has no sign-in and holds no data itself; everything goes through todo-api.",
+  "stories": ["F1.1", "F1.2", "F1.3", "F1.4", "F1.5", "F1.6", "F1.7"],
+  "skillsPinned": ["react-webapp", "oxygen-ui-design-system"]
+}
