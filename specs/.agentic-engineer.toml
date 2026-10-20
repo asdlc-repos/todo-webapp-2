@@ -1,0 +1,4 @@
+apiVersion = "agentic-engineer/v1"
+name = "todo-webapp-2"
+createdAt = "2026-10-20T03:28:49Z"
+idea = "A simple todo web app: a single-page web app where a user can add a todo, see the list, mark a todo done or undone, edit its title, and delete it. Todos persist. No login or auth, no sharing, no due dates or categories."
